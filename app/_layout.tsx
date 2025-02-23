@@ -8,18 +8,23 @@ import * as SecureStore from 'expo-secure-store';
 import { TokenCache } from '@clerk/clerk-expo/dist/cache';
 import { Platform } from 'react-native';
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 const RootLayout = () => {
     return (
-        <ClerkProvider publishableKey={publishableKey!} tokenCache={tokenCache}>
-            <ClerkLoaded>
-                <GestureHandlerRootView>
-                    <InitialLayout />
-                </GestureHandlerRootView>
-            </ClerkLoaded>
-        </ClerkProvider>
+        <QueryClientProvider client={queryClient}>
+            <ClerkProvider publishableKey={publishableKey!} tokenCache={tokenCache}>
+                <ClerkLoaded>
+                    <GestureHandlerRootView>
+                        <InitialLayout />
+                    </GestureHandlerRootView>
+                </ClerkLoaded>
+            </ClerkProvider>
+        </QueryClientProvider>
     );
 };
 
@@ -58,7 +63,7 @@ const InitialLayout = () => {
         const inAuthGroup = segments[0] === '(authenticated)';
 
         if (!inAuthGroup && isSignedIn) {
-            router.replace('/(authenticated)/(tabs)/home');
+            router.replace('/(authenticated)/(tabs)/crypto');
         } else if (inAuthGroup && !isSignedIn) {
             router.replace('/');
         }
