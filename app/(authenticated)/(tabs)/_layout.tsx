@@ -37,8 +37,7 @@ const Layout = () => {
         name="crypto"
         options={{
           title: 'Crypto',
-          headerTitleAlign: 'center',
-          headerShadowVisible: false,
+          header: () => <CustomHeader />,
           tabBarIcon: ({ size, color }) => (
             <Icon name="logo-bitcoin" size={size} color={color} />
           )

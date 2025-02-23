@@ -1,6 +1,6 @@
 import { Link, Stack, router, useSegments } from "expo-router";
 import "../global.css";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { ClerkProvider, ClerkLoaded, useAuth } from '@clerk/clerk-expo';
 import Icon from "react-native-vector-icons/Ionicons";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -122,6 +122,26 @@ const InitialLayout = () => {
                 }}
             />
             <Stack.Screen name="(authenticated)/(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(authenticated)/crypto/[id]" options={{
+                title: '',
+                headerShadowVisible: false,
+                headerStyle: { backgroundColor: '#f3f4f6' },
+                headerLeft: () => (
+                    <TouchableOpacity onPress={() => router.back()}>
+                        <Icon name="chevron-back-outline" size={32} color="#000" />
+                    </TouchableOpacity>
+                ),
+                headerRight: () => (
+                    <View className="flex-row items-center gap-x-4">
+                        <TouchableOpacity>
+                            <Icon name="notifications-outline" size={32} color="#000" />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Icon name="star-outline" size={32} color="#000" />
+                        </TouchableOpacity>
+                    </View>
+                )
+            }} />
         </Stack>
     );
 };
