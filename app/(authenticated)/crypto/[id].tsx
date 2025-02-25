@@ -1,10 +1,19 @@
 import { View, Text, SectionList, Image, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
-import { CartesianChart, Line } from "victory-native";
-import { useFont } from '@shopify/react-native-skia';
+import { CartesianChart, Line, useChartPressState } from "victory-native";
+import { Circle, useFont } from '@shopify/react-native-skia';
 import { format } from 'date-fns';
+import * as Haptics from 'expo-haptics';
+import Animated, { SharedValue, useAnimatedProps } from 'react-native-reanimated';
+import { TextInput } from 'react-native-gesture-handler';
+
+Animated.addWhitelistedNativeProps({
+  text: true,
+  defaultValue: true,
+})
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface TickerData {
   market_cap: number;
@@ -13,11 +22,24 @@ interface TickerData {
   volume_24h: number;
 }
 
+function ToolTip({ x, y }: { x: SharedValue<number>; y: SharedValue<number> }) {
+  return <Circle cx={x} cy={y} r={8} color="black" />;
+}
+
 const Page = () => {
   const { id } = useLocalSearchParams()
   const buttons = ['Overview', 'News', 'Orders', 'Transactions']
   const [activeIndex, setActiveIndex] = React.useState(0)
   const font = useFont( require('@/assets/fonts/SpaceMono-Regular.ttf'), 12 );
+  const {state, isActive} = useChartPressState({ x: 0, y: {price: 0} });
+
+  useEffect(() => {
+    
+    if (isActive) {
+      Haptics.selectionAsync()
+    }
+  }, [isActive])
+
   const { data, isLoading } = useQuery({
     queryKey: ['info', { id }],
     queryFn: async () => {
@@ -33,6 +55,22 @@ const Page = () => {
       const response = await fetch(`/api/tickers`)
       return response.json()
     },
+  })
+
+  const animatedText = useAnimatedProps(() => {
+    return {
+      text:`${state.y.price.value.value.toFixed(2)} $`,
+      defaultValue: 'default value'
+    }
+  }
+  )
+
+  const animatedDateText = useAnimatedProps(() => {
+    const date = new Date(state.x.value.value)
+    return {
+      text: `${date.toLocaleDateString()}`,
+      defaultValue: 'default date value'
+    }
   })
 
   if (isLoading) {
@@ -69,7 +107,19 @@ const Page = () => {
         renderItem={({ item }) => (
           <View className='p-5'>
             <View className='h-[400px] p-5 bg-white rounded-lg'>
+            {!isActive ? (
+              <View className='mb-5'>
+                <AnimatedTextInput editable={false} className='text-2xl font-bold'>Price: {tickers[tickers.length - 1].price} $</AnimatedTextInput>
+                <AnimatedTextInput editable={false} className='text-md text-gray-400'>Time: {format(new Date(tickers[tickers.length - 1].timestamp), 'dd/MM/yyyy')}</AnimatedTextInput>
+              </View>
+            ) : 
+            <View className='mb-5'>
+              <AnimatedTextInput editable={false} className='text-2xl font-bold' animatedProps={animatedText}></AnimatedTextInput>
+              <AnimatedTextInput editable={false} className='text-md text-gray-400' animatedProps={animatedDateText}></AnimatedTextInput>
+            </View>
+            }
                 <CartesianChart<TickerData> 
+                chartPressState={state}
                 axisOptions={{
                   font,
                   tickCount: 5,
@@ -79,7 +129,12 @@ const Page = () => {
                 }} 
                 data={tickers} xKey="timestamp" yKeys={["price"]}>
                 {({ points }) => (
+                  <>
                   <Line points={points.price} color="green" strokeWidth={3} />
+                  {isActive && (
+                    <ToolTip x={state.x.position} y={state.y.price.position} />
+                  )}
+                  </>
                 )}
                 </CartesianChart>
             </View>
