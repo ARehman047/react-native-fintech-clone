@@ -17,6 +17,7 @@
   "dependencies": {
     "@clerk/clerk-expo": "^2.7.7",
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-menu/menu": "^1.2.2",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
@@ -30,7 +31,9 @@
     "expo-constants": "~17.0.6",
     "expo-font": "~13.0.3",
     "expo-haptics": "~14.0.1",
+    "expo-image-picker": "~16.0.6",
     "expo-linking": "~7.0.5",
+    "expo-local-authentication": "~15.0.2",
     "expo-router": "~4.0.17",
     "expo-secure-store": "~14.0.1",
     "expo-splash-screen": "~0.29.22",
@@ -54,9 +57,7 @@
     "tailwindcss": "^3.4.17",
     "victory-native": "^41.16.1",
     "zeego": "^2.0.4",
-    "zustand": "^5.0.3",
-    "@react-native-async-storage/async-storage": "1.23.1",
-    "expo-local-authentication": "~15.0.2"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

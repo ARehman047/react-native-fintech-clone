@@ -45,6 +45,8 @@ const Page = () => {
   const { state, isActive } = useChartPressState({ x: 0, y: { price: 0 } });
 
   useEffect(() => {
+    console.log(isActive);
+    
     if (isActive) {
       Haptics.selectionAsync();
     }
@@ -132,13 +134,13 @@ const Page = () => {
         renderItem={({ item }) => (
           <View className="p-5">
             <View className="h-[400px] p-5 bg-white rounded-lg">
-              {!isActive ? (
+              {!isActive && (
                 <View className="mb-5">
                   <AnimatedTextInput
                     editable={false}
                     className="text-2xl font-bold"
                   >
-                    Price: {tickers[tickers.length - 1].price} $
+                    Price: {tickers![tickers!.length - 1].price} $
                   </AnimatedTextInput>
                   <AnimatedTextInput
                     editable={false}
@@ -146,12 +148,14 @@ const Page = () => {
                   >
                     Time:{" "}
                     {format(
-                      new Date(tickers[tickers.length - 1].timestamp),
+                      new Date(tickers![tickers!.length - 1].timestamp),
                       "dd/MM/yyyy"
                     )}
                   </AnimatedTextInput>
                 </View>
-              ) : (
+              ) 
+            }
+              {isActive && (
                 <View className="mb-5">
                   <AnimatedTextInput
                     editable={false}
@@ -164,8 +168,9 @@ const Page = () => {
                     animatedProps={animatedDateText}
                   ></AnimatedTextInput>
                 </View>
-              )}
-              <CartesianChart<TickerData>
+              )} 
+            
+              <CartesianChart<TickerData, any, any>
                 chartPressState={state}
                 axisOptions={{
                   font,

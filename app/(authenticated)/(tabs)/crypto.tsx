@@ -43,11 +43,11 @@ const crypto = () => {
                   <Text className='font-semibold text-gray-600'>{currency.quote.EUR.price.toFixed(2)} $</Text>
                   <View className='flex-row gap-x-1'>
                     {currency.quote.EUR.percent_change_1h < 0 ?
-                      <> <Ionicons name='caret-down' size={18} color='#dc2626' />
-                        <Text className='text-red-600'>{currency.quote.EUR.percent_change_1h.toFixed(2)}%</Text> </>
+                      <><Ionicons name='caret-down' size={18} color='#dc2626' />
+                        <Text className='text-red-600'>{currency.quote.EUR.percent_change_1h.toFixed(2)}%</Text></>
                       :
-                      <> <Ionicons name='caret-up' size={18} color='#16a34a' />
-                        <Text className='text-green-600'>{currency.quote.EUR.percent_change_1h.toFixed(2)}%</Text> </>
+                      <><Ionicons name='caret-up' size={18} color='#16a34a' />
+                        <Text className='text-green-600'>{currency.quote.EUR.percent_change_1h.toFixed(2)}%</Text></>
                     }
 
                   </View>

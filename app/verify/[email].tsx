@@ -106,7 +106,7 @@ const phone = () => {
 
     <View className='p-5'>
       <Text className='text-4xl font-extrabold'>6-Digit Code</Text>
-      <Text className='mt-5 text-gray-500'>Code send to ${email} unless you already have an account</Text>
+      <Text className='mt-5 text-gray-500'>Code send to {email} unless you already have an account</Text>
 
       <CodeField
         ref={ref}
